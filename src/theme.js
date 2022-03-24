@@ -14,5 +14,14 @@ export default createTheme({
         subtitle1: {
             fontWeight: 700
         }
+    },
+    mixins: {
+        centerAlign: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh'
+        }
     }
 })

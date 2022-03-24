@@ -1,10 +1,11 @@
-import { Box, Typography, FilledInput } from '@mui/material';
+import { Box, Typography, FilledInput, useTheme } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [word, setWord] = useState("")
+    const theme = useTheme();
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
@@ -15,13 +16,7 @@ const Home = () => {
     }
 
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh'
-        }}>
+        <Box sx={{ ...theme.mixins.centerAlign }}>
             <Typography color="primary" sx={{ mb: 7 }} variant="h3">Dictionary</Typography>
             <img style={{ marginBottom: '50px' }} src={`${process.env.PUBLIC_URL}/assets/dictionary.png`} alt="Словарь"/>
             <Box sx={{

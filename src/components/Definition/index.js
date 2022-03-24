@@ -1,6 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
-import {Stack, Typography, IconButton, Divider, Box} from "@mui/material";
+import {Stack, Typography, IconButton, Divider, Box, CircularProgress, useTheme, Button} from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, Fragment } from 'react';
 import axios from "axios";
@@ -8,17 +8,33 @@ import axios from "axios";
 const Definition = () => {
     const { word } = useParams();
     const navigate = useNavigate();
-    const [definitions, setDefs] = useState([])
+    const [definitions, setDefs] = useState([]);
+    const [loading, setLoad] = useState(true);
+    const [exist, setExist] = useState(true);
+    const theme = useTheme();
 
     useEffect(() => {
         const fetchDef = async () => {
-            const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-            setDefs(response.data)
+            try {
+                const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+                setDefs(response.data);
+                setLoad(false);
+            } catch(err) {
+                console.log('error');
+                setExist(false);
+            }
         }
 
         fetchDef();
 
     }, []);
+
+    if (!exist) return <Box sx={{ ...theme.mixins.centerAlign }}>
+        <Typography>Not Found</Typography>
+        <Button variant="contained" sx={{ my: 2 }} onClick={() => navigate('/')}>Return to Home page</Button>
+    </Box>
+
+    if (loading) return <Box sx={{ ...theme.mixins.centerAlign }}><CircularProgress /></Box>;
 
     return (
         <>
