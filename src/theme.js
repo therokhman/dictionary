@@ -10,6 +10,9 @@ export default createTheme({
         fontFamily: "Roboto, sans-serif",
         h3: {
             fontWeight: 700
+        },
+        subtitle1: {
+            fontWeight: 700
         }
     }
 })

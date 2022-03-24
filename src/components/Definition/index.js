@@ -1,14 +1,14 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
-import { Stack, Typography, IconButton } from "@mui/material";
+import {Stack, Typography, IconButton, Divider, Box} from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import axios from "axios";
 
 const Definition = () => {
     const { word } = useParams();
     const navigate = useNavigate();
-    const [defs, setDefs] = useState([])
+    const [definitions, setDefs] = useState([])
 
     useEffect(() => {
         const fetchDef = async () => {
@@ -41,6 +41,26 @@ const Definition = () => {
                     <PlayCircleFilledWhiteIcon sx={{ fontSize: 70 }}/>
                 </IconButton>
             </Stack>
+
+            {definitions.map((def, index) =>
+                <Fragment key={index}>
+                    <Divider sx={{ display: index === 0 ? 'none' : 'block', my: 4}}/>
+                    {def.meanings.map(meaning =>
+                        <Box key={meaning.partOfSpeech} sx={{
+                            backgroundColor: 'white',
+                            borderRadius: 3,
+                            boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.05)',
+                            mt: 3,
+                            p: 2
+                        }}>
+                            <Typography sx={{ textTransform: 'capitalize'}} color="GrayText" variant="subtitle1">{meaning.partOfSpeech}</Typography>
+                            {meaning.definitions.map((definition, index) => <Typography sx={{ my: 1}} color="GrayText" key={definition}>{meaning.definitions.length > 1 && `${index + 1}. `}{definition.definition}</Typography>)}
+
+                        </Box>
+                    )}
+
+                </Fragment>
+                    )}
         </>
     )
 }
