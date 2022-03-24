@@ -11,6 +11,7 @@ const Definition = () => {
     const [definitions, setDefs] = useState([]);
     const [loading, setLoad] = useState(true);
     const [exist, setExist] = useState(true);
+    const [audio, setAudio] = useState(null)
     const theme = useTheme();
 
     useEffect(() => {
@@ -19,6 +20,9 @@ const Definition = () => {
                 const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
                 setDefs(response.data);
                 setLoad(false);
+                if (!response.data[0].phonetics.length) return;
+                const url = response.data[0].phonetics[0].audio.replace('//ssl', 'https://ssl');
+                setAudio(new Audio(url));
             } catch(err) {
                 console.log('error');
                 setExist(false);
@@ -53,16 +57,16 @@ const Definition = () => {
                 borderRadius: 10,
             }}>
                 <Typography variant="h3" sx={{ textTransform: 'capitalize'}}>{word}</Typography>
-                <IconButton>
-                    <PlayCircleFilledWhiteIcon sx={{ fontSize: 70 }}/>
-                </IconButton>
+                {audio && <IconButton onClick={() => audio.play()}>
+                    <PlayCircleFilledWhiteIcon sx={{fontSize: 70}}/>
+                </IconButton>}
             </Stack>
 
             {definitions.map((def, index) =>
                 <Fragment key={index}>
                     <Divider sx={{ display: index === 0 ? 'none' : 'block', my: 4}}/>
                     {def.meanings.map(meaning =>
-                        <Box key={meaning.partOfSpeech} sx={{
+                        <Box key={Math.random()} sx={{
                             backgroundColor: 'white',
                             borderRadius: 3,
                             boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.05)',
@@ -70,7 +74,7 @@ const Definition = () => {
                             p: 2
                         }}>
                             <Typography sx={{ textTransform: 'capitalize'}} color="GrayText" variant="subtitle1">{meaning.partOfSpeech}</Typography>
-                            {meaning.definitions.map((definition, index) => <Typography sx={{ my: 1}} color="GrayText" key={definition}>{meaning.definitions.length > 1 && `${index + 1}. `}{definition.definition}</Typography>)}
+                            {meaning.definitions.map((definition, index) => <Typography sx={{ my: 1}} color="GrayText" key={definition.definition}>{meaning.definitions.length > 1 && `${index + 1}. `}{definition.definition}</Typography>)}
 
                         </Box>
                     )}
