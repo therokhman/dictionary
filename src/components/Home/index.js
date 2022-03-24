@@ -6,12 +6,14 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
     const [word, setWord] = useState("")
     const navigate = useNavigate();
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        const trimWord = word.trim();
+        const trimWord = word.trim().toLowerCase();
         if (trimWord.split(' ').length > 1 || !trimWord) return;
         navigate(`/search/${word}`)
     }
+
     return (
         <Box sx={{
             display: 'flex',
